@@ -13,6 +13,8 @@ PyTorch implementation of our paper Fast and Accurate Semantic Segmentation with
 
 ### Usage
 
+Change your cityscapes path in the config files in order to run the training/validation scripts.
+
 **To train the model :**
 
 ```
