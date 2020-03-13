@@ -4,7 +4,8 @@ PyTorch implementation of our paper Fast and Accurate Semantic Segmentation with
 
 
 Training was done using 2x NVIDIA TITAN RTX GPUs and Python 3.6.9. 
-Speed was calculated on a single GTX 1080ti GPU.
+
+Speed was measured on a single GTX 1080ti GPU  and an Intel Core i7-9700K processor.
 
 
 ### Requirements
