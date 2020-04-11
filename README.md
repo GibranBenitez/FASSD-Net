@@ -25,6 +25,9 @@ Change your Cityscapes path in the config files in order to run the training/val
 python train.py --model FASSDNet --config ./configs/FASSD-Net.yml
 python train.py --model FASSDNetL1 --config ./configs/FASSD-Net-L1.yml
 python train.py --model FASSDNetL2 --config ./configs/FASSD-Net-L2.yml
+
+alternatively:
+python train_nohup.py --model FASSDNet --config ./configs/FASSD-Net.yml
 ```
 
 **To validate the model :**
