@@ -14,7 +14,7 @@ Speed was measured on a single NVIDIA GTX 1080ti GPU and an Intel Core i7-9700K 
 * scipy
 * tqdm
 * tensorboardX
-* pil
+* pill
 
 ### Usage
 
