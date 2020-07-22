@@ -177,7 +177,7 @@ def inference(args, model, model_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Hyperparams")        
-    parser.add_argument("--model", type=str, default="FASSDNetL2_trt", help="Model used for the demo FASSDNetL2")
+    parser.add_argument("--model", type=str, default="FASSDNetL2_trt", help="Model used for the demo FASSDNetL2 (fastest)")
     parser.add_argument("--path", type=str, default="./demo_imgs/", help="path or image to evaluate")
     parser.add_argument("--eval_res", type=str, default="512,1024", help="input size of the network. 'original' evaluates with the original image size")
             
