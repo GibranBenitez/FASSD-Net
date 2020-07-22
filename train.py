@@ -9,9 +9,10 @@ import random
 import argparse
 import numpy as np
 import torch.nn as nn
+import pdb
 
 from torch.utils import data
-from tqdm import tqdm
+import sys
 
 from ptsemseg.loss import get_loss_function
 from ptsemseg.loader import get_loader
@@ -21,10 +22,6 @@ from ptsemseg.augmentations import get_composed_augmentations
 from ptsemseg.schedulers import get_scheduler
 from ptsemseg.optimizers import get_optimizer
 
-# from ptsemseg.models.FASSDNet import FASSDNet
-# from ptsemseg.models.FASSDNetL1 import FASSDNet
-# from ptsemseg.models.FASSDNetL2 import FASSDNet
-
 from tensorboardX import SummaryWriter
 
 def weights_init(m):
@@ -32,7 +29,7 @@ def weights_init(m):
         nn.init.xavier_normal_(m.weight)
 
 def train(cfg, writer, logger):
-    cfg
+    # cfg
 
     # Setup seeds
     torch.manual_seed(cfg.get("seed", 1337))
@@ -135,22 +132,28 @@ def train(cfg, writer, logger):
     start_iter = 0
     if cfg["training"]["resume"] is not None:
         if os.path.isfile(cfg["training"]["resume"]):
-            logger.info(
-                "Loading model and optimizer from checkpoint '{}'".format(cfg["training"]["resume"])
-            )
+            
+            print_str = "Finetuning model from '{}'".format(cfg["training"]["finetune"])
+            if logger is not None:
+                logger.info(print_str)
+            print(print_str)
+            
             checkpoint = torch.load(cfg["training"]["resume"])
             model.load_state_dict(checkpoint["model_state"])
             optimizer.load_state_dict(checkpoint["optimizer_state"])
             scheduler.load_state_dict(checkpoint["scheduler_state"])
             start_iter = checkpoint["epoch"]
-            logger.info(
-                "Loaded checkpoint '{}' (iter {})".format(
-                    cfg["training"]["resume"], checkpoint["epoch"]
-                )
-            )
+            
+            print_str = "Loaded checkpoint '{}' (iter {})".format(cfg["training"]["resume"], checkpoint["epoch"])
+            print(print_str)
+            if logger is not None:
+                logger.info(print_str)
         else:
-            logger.info("No checkpoint found at '{}'".format(cfg["training"]["resume"]))
-
+            print_str = "No checkpoint found at '{}'".format(cfg["training"]["resume"])
+            print(print_str)
+            if logger is not None:
+                logger.info(print_str)
+    
     if cfg["training"]["finetune"] is not None:
         if os.path.isfile(cfg["training"]["finetune"]):
             logger.info(
@@ -167,6 +170,8 @@ def train(cfg, writer, logger):
     flag = True
     loss_all = 0
     loss_n = 0
+    sys.stdout.flush()
+    
     while i <= cfg["training"]["train_iters"] and flag:
         for (images, labels, _) in trainloader:
             i += 1
@@ -200,7 +205,9 @@ def train(cfg, writer, logger):
                 
 
                 print(print_str)
-                logger.info(print_str)
+                if logger is not None:
+                    logger.info(print_str)
+                    
                 writer.add_scalar("loss/train_loss", loss.item(), i + 1)
                 time_meter.reset()
 
@@ -212,7 +219,8 @@ def train(cfg, writer, logger):
                 loss_all = 0
                 loss_n = 0
                 with torch.no_grad():
-                    for i_val, (images_val, labels_val, _) in tqdm(enumerate(valloader)):
+                    # for i_val, (images_val, labels_val, _) in tqdm(enumerate(valloader)):
+                    for i_val, (images_val, labels_val, _) in enumerate(valloader):
                         images_val = images_val.to(device)
                         labels_val = labels_val.to(device)
 
@@ -226,12 +234,19 @@ def train(cfg, writer, logger):
                         val_loss_meter.update(val_loss.item())
 
                 writer.add_scalar("loss/val_loss", val_loss_meter.avg, i + 1)
-                logger.info("Iter %d Val Loss: %.4f" % (i + 1, val_loss_meter.avg))
+
+                print_str = "Iter %d Val Loss: %.4f" % (i + 1, val_loss_meter.avg)
+                if logger is not None:
+                    logger.info(print_str)
+                print(print_str)
 
                 score, class_iou = running_metrics_val.get_scores()
                 for k, v in score.items():
-                    print(k, v)
-                    logger.info("{}: {}".format(k, v))
+                    print_str = "{}: {}".format(k, v)
+                    if logger is not None:
+                        logger.info(print_str)
+                    print(print_str)
+                    
                     writer.add_scalar("val_metrics/{}".format(k), v, i + 1)
 
                 for k, v in class_iou.items():
@@ -270,6 +285,7 @@ def train(cfg, writer, logger):
             if (i + 1) == cfg["training"]["train_iters"]:
                 flag = False
                 break
+            sys.stdout.flush()  # Added
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="config")
@@ -315,7 +331,9 @@ if __name__ == "__main__":
 
     print("RUNDIR: {}".format(logdir))
     shutil.copy(args.config, logdir)
-
-    logger = get_logger(logdir)
+    
+    logger = None
+    # logger = get_logger(logdir)
+    # logger.info("Let the games begin")
 
     train(cfg, writer, logger)

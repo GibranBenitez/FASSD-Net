@@ -9,8 +9,8 @@ Speed was measured on a single NVIDIA GTX 1080ti GPU and an Intel Core i7-7700K 
 
 
 ### Requirements
-* pytorch 1.0.0
-* torchvision 0.2.0
+* pytorch >= 1.0.0
+* torchvision >= 0.2.0
 * scipy
 * tqdm
 * tensorboardX
@@ -22,26 +22,23 @@ Change your Cityscapes path in the config files in order to run the training/val
 
 **To train the model :**
 
-```
+```shell
 python train.py --model FASSDNet --config ./configs/FASSD-Net.yml
 python train.py --model FASSDNetL1 --config ./configs/FASSD-Net-L1.yml
 python train.py --model FASSDNetL2 --config ./configs/FASSD-Net-L2.yml
-
-alternatively:
-python train_nohup.py --model FASSDNet --config ./configs/FASSD-Net.yml
 ```
 
 **To validate the model :**
 
-```
-python validate.py --model FASSDNet --model_path ./FASSD-Net-Cityscapes.pkl
-python validate.py --model FASSDNetL1 --model_path ./FASSD-Net-L1-Cityscapes.pkl
-python validate.py --model FASSDNetL2 --model_path ./FASSD-Net-L2-Cityscapes.pkl
+```shell
+python validate.py --model FASSDNet --model_path ./weights/FASSD-Net-Cityscapes.pkl
+python validate.py --model FASSDNetL1 --model_path ./weights/FASSD-Net-L1-Cityscapes.pkl
+python validate.py --model FASSDNetL2 --model_path ./weights/FASSD-Net-L2-Cityscapes.pkl
 ```
 
 **To measure the speed of the model :**
 
-```
+```shell
 python eval_fps.py 1024,2048 --model FASSDNet
 python eval_fps.py 1024,2048 --model FASSDNetL1
 python eval_fps.py 1024,2048 --model FASSDNetL2

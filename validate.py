@@ -137,7 +137,7 @@ if __name__ == "__main__":
         "--model_path",
         nargs="?",
         type=str,
-        default="FASSD-Net-Cytiscapes.pkl",
+        default="weights/FASSD-Net-Cytiscapes.pkl",
         help="Path to the saved model",
     )    
 
