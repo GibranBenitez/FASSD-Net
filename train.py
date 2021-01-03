@@ -250,7 +250,11 @@ def train(cfg, writer, logger):
                     writer.add_scalar("val_metrics/{}".format(k), v, i + 1)
 
                 for k, v in class_iou.items():
-                    logger.info("{}: {}".format(k, v))
+                    print_str = "{}: {}".format(k, v)
+                    if logger is not None:
+                        logger.info(print_str)
+                    print(print_str)
+                    
                     writer.add_scalar("val_metrics/cls_{}".format(k), v, i + 1)
 
                 val_loss_meter.reset()
