@@ -28,7 +28,7 @@ def weights_init(m):
     if isinstance(m, nn.Conv2d):
         nn.init.xavier_normal_(m.weight)
 
-def train(cfg, writer, logger):
+def train(cfg, writer, logger, args):
     # cfg
 
     # Setup seeds
@@ -79,7 +79,7 @@ def train(cfg, writer, logger):
     running_metrics_val = runningScore(n_classes)
 
     # Setup Model
-    model = FASSDNet(19).to(device)
+    model = FASSDNet(n_classes=19, alpha=args.alpha).to(device)
 
     total_params = sum(p.numel() for p in model.parameters())
     print( 'Parameters:',total_params )
@@ -310,6 +310,8 @@ if __name__ == "__main__":
         default="FASSDNet", # FASSDNetL1, FASSDNetL2
         help="Model variation to use",
     )
+    
+    parser.add_argument("--alpha", default=2, nargs="?", type=int)  # NEW ALPHA IMPLEMENTATION
 
     args = parser.parse_args()
 
@@ -340,4 +342,4 @@ if __name__ == "__main__":
     # logger = get_logger(logdir)
     # logger.info("Let the games begin")
 
-    train(cfg, writer, logger)
+    train(cfg, writer, logger, args)
