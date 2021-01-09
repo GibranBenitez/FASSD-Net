@@ -332,7 +332,7 @@ if __name__ == "__main__":
         cfg = yaml.load(fp)
 
     run_id = random.randint(1, 100000)
-    logdir = os.path.join("runs", os.path.basename(args.config)[:-4], "cur")
+    logdir = os.path.join("runs", os.path.basename(args.config)[:-4]+"_{}".format(args.alpha), "cur")
     writer = SummaryWriter(log_dir=logdir)
 
     print("RUNDIR: {}".format(logdir))
