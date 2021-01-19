@@ -260,7 +260,7 @@ class TransitionUp(nn.Module):
         return out
 
 class FASSDNet(nn.Module):
-    def __init__(self, n_classes=19):
+    def __init__(self, n_classes=19, alpha=2):
         super(FASSDNet, self).__init__()
 
         first_ch  = [16, 24, 32, 48]
@@ -301,7 +301,7 @@ class FASSDNet(nn.Module):
         self.n_blocks =  n_blocks
 
         # --- DAPF
-        self.DAPF = build_DAPF(inplanes = prev_block_channels, alpha=2, BatchNorm=nn.BatchNorm2d)
+        self.DAPF = build_DAPF(inplanes = prev_block_channels, alpha=alpha, BatchNorm=nn.BatchNorm2d)
 
         #### --- Decoder ---###
         dilation_block = [2, 4, 8, 16]
